@@ -46,6 +46,11 @@
   border: 1px solid #a7f3d0;
 }
 
+.width-height30{
+  width: 30%;
+  height: 30%;
+}
+
 .gradient-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500;
 }

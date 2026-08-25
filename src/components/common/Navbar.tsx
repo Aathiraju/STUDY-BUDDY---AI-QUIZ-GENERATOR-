@@ -48,7 +48,7 @@ export const Navbar: React.FC = () => {
             <img
               src="/logo.png"
               alt="Study Buddy Logo"
-              className="h-10 w-auto object-contain group-hover:scale-105 transition-all"
+              className="width-height30 h-10 w-auto object-contain group-hover:scale-105 transition-all"
             />
           </Link>
 
