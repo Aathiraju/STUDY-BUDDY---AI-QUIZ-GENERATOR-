@@ -1,0 +1,235 @@
+# 📚 StudyBuddy - AI-Powered Grounded Study Companion
+
+[![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-Express-green.svg)](https://expressjs.com/)
+[![Gemini AI](https://img.shields.io/badge/Google_Gemini-1.5_Flash-orange.svg)](https://ai.google.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-purple.svg)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
+
+**StudyBuddy** is a full-stack, AI-powered study platform designed to transform raw study materials (PDFs, notes, documents) into interactive quizzes, flashcards, mind maps, and a grounded RAG (Retrieval-Augmented Generation) AI teaching assistant.
+
+Powered by **Google Gemini 1.5 Flash** with built-in client/server fallback engines, StudyBuddy delivers instant, context-aware study aids with direct page citations, detailed explanations, and comprehensive learning analytics.
+
+---
+
+## 🌟 Key Features
+
+### 📄 1. PDF & Document Processing
+- Upload PDF study materials with real-time text parsing via backend `pdf-parse`.
+- Automatic metadata extraction: page count, estimated reading time, word count, file size, and text preview.
+- Local fallback parser ensures seamless functionality even offline or without a backend connection.
+
+### 🧠 2. AI-Grounded Quiz Generator
+- Generate quizzes grounded strictly in your uploaded study notes using **Google Gemini 1.5 Flash**.
+- **Multiple Question Types**: Multiple Choice (MCQ), True/False, Fill in the Blanks, and Short Answer.
+- **Customizable Quiz Settings**:
+  - Difficulty Levels: Easy, Medium, Hard.
+  - Question Counts & Timed Quiz Mode (with toggleable countdown timers).
+  - Multi-language Support: English, Tamil, Hindi, Spanish, French.
+  - Topic focus filtering and option/question randomization.
+- **Detailed Distractor Explanations**: "Why other options are wrong" breakdowns for deeper conceptual clarity.
+- Direct **Page Citations** for every generated question.
+
+### 🤖 3. RAG "Friendly Teacher" AI Assistant
+- Interactive study chatbot acting as a warm, patient virtual tutor.
+- Answers student questions using RAG (Retrieval-Augmented Generation) grounded strictly in active document text.
+- Provides precise page references and snippet citations to verify answers.
+
+### 🎴 4. Interactive Study Tools
+- **Flashcard Revision Deck**: Interactive flip cards categorized by topic with mastery tagging (Mastered / Review Needed).
+- **Mind Map Visualization**: Hierarchical node tree mapping core study concepts and sub-topics.
+
+### 📊 5. Learning Analytics & Gamification
+- Interactive progress charts built with **Recharts**:
+  - Weekly quiz performance trends.
+  - Topic-wise accuracy breakdown.
+  - Performance by difficulty level.
+- Cumulative study stats: total study time, quizzes completed, overall accuracy.
+- **AI Recommendations**: Dynamic study advice based on performance metrics.
+- **Gamified Achievements**: Unlockable badges for study milestones (e.g., *First Quiz Passed*, *Study Streak*, *Master Mind*).
+
+### 🔐 6. User Authentication & Profile Customization
+- Express authentication system with **Gmail validation** (`@gmail.com`).
+- Profile management with customizable avatars, study goals, preferred difficulty, and notification settings.
+- Dark mode toggle with instant global UI updates.
+
+---
+
+## 🏗️ System Architecture
+
+```
+                                  +-----------------------+
+                                  |   React 18 Frontend   |
+                                  | (TypeScript + Vite)   |
+                                  +-----------+-----------+
+                                              |
+                                HTTP REST API | Axios / Fetch
+                                              v
+                                  +-----------------------+
+                                  |   Express.js Server   |
+                                  |      (Port 5000)      |
+                                  +-----+-----------+-----+
+                                        |           |
+               +------------------------+           +-----------------------+
+               |                                                            |
+               v                                                            v
++-------------------------------+                            +-------------------------------+
+|    Google Gemini 1.5 Flash    |                            |       pdf-parse Engine        |
+|  (Quiz Gen & RAG Assistant)   |                            |   (PDF Text & Meta Extract)   |
++-------------------------------+                            +-------------------------------+
+```
+
+### Hybrid Fallback Architecture
+StudyBuddy is built with high availability in mind:
+- **Online Mode**: Communicates with the Node.js Express server to leverage `pdf-parse` and **Google Gemini 1.5 Flash API**.
+- **Offline / Standalone Mode**: Automatically falls back to client-side parsers and intelligent template generators if the backend or Gemini API key is unavailable.
+
+---
+
+## 📁 Directory Structure
+
+```
+STUDY BUDDY/
+├── server/
+│   └── index.js              # Express API server (Auth, PDF upload, Gemini AI RAG & Quiz endpoints)
+├── src/
+│   ├── assets/               # Static assets & images
+│   ├── components/
+│   │   └── common/
+│   │       ├── AuthModal.tsx # Authentication modal (Login / Sign Up)
+│   │       ├── Footer.tsx    # Footer component
+│   │       └── Navbar.tsx    # Header navigation & profile status
+│   ├── contexts/
+│   │   ├── AuthContext.tsx   # User authentication state & localStorage persistence
+│   │   ├── StudyContext.tsx  # Document management, quiz state, flashcards, chat history
+│   │   └── ThemeContext.tsx  # Theme toggle management (Light/Dark mode)
+│   ├── pages/
+│   │   ├── AnalyticsPage.tsx   # Performance charts (Recharts) & badges
+│   │   ├── AssistantPage.tsx   # RAG Friendly Teacher AI chat assistant UI
+│   │   ├── Dashboard.tsx       # Main student dashboard with study statistics & quick actions
+│   │   ├── FavQuizzesPage.tsx  # Bookmarked favorite quizzes gallery
+│   │   ├── HistoryPage.tsx     # Past quiz attempt history
+│   │   ├── LandingPage.tsx     # Hero landing page & product showcase
+│   │   ├── ProfilePage.tsx     # User settings, study goals, and badge showcase
+│   │   ├── QuizPlayerPage.tsx  # Interactive quiz player with timer & explanations
+│   │   ├── QuizResultsPage.tsx # Score breakdown, grade, and review panel
+│   │   ├── QuizSettingsPage.tsx# Quiz generator configuration options
+│   │   ├── ToolsPage.tsx       # Flashcards deck & Mind Map tree view
+│   │   ├── UploadPage.tsx      # PDF drag-and-drop file uploader
+│   │   └── UploadedPdfsPage.tsx# Document repository & active document selector
+│   ├── services/
+│   │   └── apiService.ts     # Client API bridge (Express calls with local fallbacks)
+│   ├── types/
+│   │   └── index.ts          # Core TypeScript type definitions & interfaces
+│   ├── utils/
+│   │   ├── aiQuizGenerator.ts# Fallback quiz engine & sample documents
+│   │   └── ocrEngine.ts      # Optical character recognition & text utilities
+│   ├── App.tsx               # Main React router & layout root
+│   ├── index.css             # Tailwind CSS imports & global styles
+│   └── main.tsx              # Application entry point
+├── .env.example              # Environment variables template
+├── package.json              # Dependencies & npm scripts
+├── postcss.config.js         # PostCSS configuration for Tailwind
+├── tailwind.config.js        # Tailwind CSS styling configuration
+├── tsconfig.json             # TypeScript compiler settings
+└── vite.config.ts            # Vite bundler configuration
+```
+
+---
+
+## ⚡ Tech Stack
+
+| Domain | Technology | Description |
+| :--- | :--- | :--- |
+| **Frontend Framework** | React 18 + TypeScript | UI component hierarchy and type safety |
+| **Build Tool** | Vite | Lightning-fast development server and asset bundling |
+| **Styling** | Tailwind CSS | Utility-first responsive styling system |
+| **Icons & UI** | Lucide React | Modern SVG icons |
+| **Animations** | Framer Motion | Fluid transitions and modal animations |
+| **Data Viz** | Recharts | Interactive study analytics charts |
+| **Celebrations** | Canvas Confetti | Confetti burst animations on quiz completion |
+| **Backend Runtime** | Node.js + Express | RESTful API server |
+| **AI Integration** | Google Generative AI | `@google/generative-ai` (Gemini 1.5 Flash) |
+| **PDF Extraction** | `pdf-parse` + Multer | In-memory PDF buffer extraction |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js**: `v18.0.0` or higher
+- **npm**: `v9.0.0` or higher
+- **Google Gemini API Key** *(Optional, fallback engine activates if omitted)*: Get your free API key at [Google AI Studio](https://aistudio.google.com/).
+
+### Installation
+
+1. **Clone the repository** (or navigate to project directory):
+   ```bash
+   cd "STUDY BUDDY"
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment Variables**:
+   Create a `.env` file in the root directory:
+   ```env
+   PORT=5000
+   GEMINI_API_KEY=your_google_gemini_api_key_here
+   ```
+
+---
+
+## 🛠️ Running the Application
+
+### Option A: Running Full Stack (Frontend + Backend)
+
+1. **Start the Express API Server**:
+   ```bash
+   npm run server
+   ```
+   *Server runs at `http://localhost:5000`*
+
+2. **Start the Vite Frontend (in a second terminal)**:
+   ```bash
+   npm run dev
+   ```
+   *Frontend app opens at `http://localhost:5173`*
+
+### Option B: Running Frontend Only (Standalone Mode)
+If you only start the frontend without the backend server:
+```bash
+npm run dev
+```
+The app will operate seamlessly using built-in client-side fallback engines for document parsing, quiz generation, and chat responses.
+
+---
+
+## 🔌 API Documentation
+
+| Method | Endpoint | Description | Request Payload | Response |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/api/health` | Health & Gemini status check | None | `{ status: "ok", geminiConfigured: boolean }` |
+| `POST` | `/api/auth/register` | Register new user account | `{ name, email, password }` | `{ success: true, user: UserProfile }` |
+| `POST` | `/api/auth/login` | Authenticate user login | `{ email, password }` | `{ success: true, user: UserProfile }` |
+| `POST` | `/api/upload-pdf` | Upload & extract PDF text | Multipart Form (`pdf` file) | `{ filename, text, pageCount, ... }` |
+| `POST` | `/api/generate-quiz` | AI Quiz generation | `{ documentText, questionCount, difficulty, documentName }` | `{ success: true, questions: Question[] }` |
+| `POST` | `/api/chat-assistant` | Grounded RAG Chat bot | `{ question, activeDocumentText, documentName }` | `{ reply: string, source: string }` |
+
+---
+
+## 🔑 Demo Account Credentials
+
+For quick testing without creating a new Gmail account:
+
+- **Email**: `alex.scholar@gmail.com`
+- **Password**: `password123`
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.

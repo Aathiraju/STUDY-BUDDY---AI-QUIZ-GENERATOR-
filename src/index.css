@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-page: #f6fbf8;
+    --bg-panel: #ffffff;
+    --bg-card: #f0fdf4;
+    --border-color: #d1fae5;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+  }
+
+  html, body, #root {
+    background-color: #f6fbf8;
+    color: #0f172a;
+    min-height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Prevent horizontal page shifts when swiping inside containers */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fresh Light Green & White Glassmorphism Styling */
+.glass-panel {
+  background: #ffffff;
+  border: 1px solid #d1fae5;
+  box-shadow: 0 4px 24px 0 rgba(16, 185, 129, 0.08);
+}
+
+.glass-card {
+  background: #f0fdf4;
+  border: 1px solid #a7f3d0;
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500;
+}
+
+/* Custom Mint Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f6fbf8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a7f3d0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6ee7b7;
+}
